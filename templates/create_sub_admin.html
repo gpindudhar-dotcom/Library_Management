@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block title %}Create Admin | Library Management System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white fw-semibold">
+        <i class="bi bi-person-plus text-primary"></i> Create Admin Account
+      </div>
+      <div class="card-body">
+        <form method="POST">
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Full Name</label>
+              <input type="text" name="name" class="form-control" placeholder="Enter full name" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Username</label>
+              <input type="text" name="username" class="form-control" placeholder="Choose a username" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Password</label>
+              <input type="password" name="password" class="form-control" placeholder="At least 4 characters" minlength="4" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Confirm Password</label>
+              <input type="password" name="confirm_password" class="form-control" placeholder="Re-enter password" minlength="4" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Role</label>
+              <select name="role" class="form-select" id="roleSelect">
+                <option value="sub_admin">Sub Admin</option>
+                {% if current_role == 'admin' %}
+                  <option value="semi_admin">Semi-Super Admin</option>
+                {% endif %}
+              </select>
+            </div>
+          </div>
+
+          <h6 class="fw-semibold mb-2"><i class="bi bi-ui-checks text-primary"></i> Grant Module Permissions</h6>
+          <p class="text-muted small" id="permHint">
+            Select which modules this Sub Admin can access. Super Admin-only modules are not shown here by design.
+          </p>
+
+          <div class="row g-2 mb-4" id="permCheckboxes">
+            {% set modules = ['books', 'add_book', 'edit_book', 'delete_book', 'issue', 'return', 'search', 'reports'] %}
+            {% for module in modules %}
+              {% set labels = {
+                'books': 'View Books', 'add_book': 'Add Books', 'edit_book': 'Edit Books',
+                'delete_book': 'Delete Books', 'issue': 'Issue Books', 'return': 'Return Books',
+                'search': 'Search Books', 'reports': 'Reports'
+              } %}
+              <div class="col-md-6">
+                <div class="form-check border rounded p-2 ps-4">
+                  <input class="form-check-input" type="checkbox" name="permissions" value="{{ module }}" id="perm_{{ module }}">
+                  <label class="form-check-label" for="perm_{{ module }}">
+                    <i class="bi bi-check-circle text-success"></i> {{ labels[module] }}
+                  </label>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary" id="submitBtn"><i class="bi bi-person-plus"></i> Create Admin</button>
+            <a href="{{ url_for('admin_management') }}" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // When Semi-Super Admin is selected, all permissions are granted automatically.
+  const roleSelect = document.getElementById('roleSelect');
+  const permBoxes = document.getElementById('permCheckboxes');
+  const permHint = document.getElementById('permHint');
+
+  function updatePermUI() {
+    const isSemi = roleSelect.value === 'semi_admin';
+    if (isSemi) {
+      // Semi-Super Admin gets all permissions automatically; hide the checkboxes.
+      permBoxes.style.display = 'none';
+      permHint.textContent = 'Semi-Super Admin automatically gets access to all library modules and can manage lower-level admins.';
+    } else {
+      permBoxes.style.display = '';
+      permHint.textContent = 'Select which modules this Sub Admin can access. Super Admin-only modules are not shown here by design.';
+    }
+  }
+
+  roleSelect.addEventListener('change', updatePermUI);
+  updatePermUI();
+</script>
+{% endblock %}

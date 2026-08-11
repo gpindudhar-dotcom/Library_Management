@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Edit Admin | Library Management System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white fw-semibold">
+        <i class="bi bi-pencil-square text-primary"></i> Edit Admin: {{ target['username'] }}
+        <span class="badge bg-secondary ms-2">{{ target['role'] }}</span>
+      </div>
+      <div class="card-body">
+        <form method="POST">
+          <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" name="name" class="form-control" value="{{ target['name'] }}" required>
+          </div>
+
+          {% if target['role'] == 'semi_admin' %}
+            <div class="alert alert-info">
+              <i class="bi bi-info-circle"></i>
+              Semi-Super Admin accounts automatically have access to all library modules
+              (Books, Add/Edit/Delete, Issue, Return, Search, Reports) and can manage
+              Sub Admin and Semi-Super Admin accounts. Their permissions cannot be changed here.
+            </div>
+          {% else %}
+            <h6 class="fw-semibold mb-2"><i class="bi bi-ui-checks text-primary"></i> Module Permissions</h6>
+            <p class="text-muted small">Select which modules this Sub Admin can access. Super Admin-only modules are not shown here by design.</p>
+
+            <div class="row g-2 mb-4">
+              {% set groupable = ['books', 'add_book', 'edit_book', 'delete_book', 'issue', 'return', 'search', 'reports'] %}
+              {% for module in groupable %}
+                {% set label = {
+                  'books': 'View Books', 'add_book': 'Add Books', 'edit_book': 'Edit Books',
+                  'delete_book': 'Delete Books', 'issue': 'Issue Books', 'return': 'Return Books',
+                  'search': 'Search Books', 'reports': 'Reports'
+                } %}
+                <div class="col-md-6">
+                  <div class="form-check border rounded p-2 ps-4">
+                    <input class="form-check-input" type="checkbox" name="permissions" value="{{ module }}" id="perm_{{ module }}"
+                      {% if module in perms %}checked{% endif %}>
+                    <label class="form-check-label" for="perm_{{ module }}">
+                      <i class="bi bi-check-circle text-success"></i> {{ label[module] }}
+                    </label>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Save Changes</button>
+            <a href="{{ url_for('admin_management') }}" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

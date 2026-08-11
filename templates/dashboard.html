@@ -1,0 +1,115 @@
+ {% extends "base.html" %}
+{% block title %}Dashboard | Kalpataru Institute of Technology Library{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+  <h1 class="mb-0"><i class="bi bi-speedometer2 text-primary"></i> Library Dashboard</h1>
+  <span class="text-muted">Welcome, {{ session.get('user_name', 'Admin') }} 👋
+    <span class="badge bg-secondary ms-1">{{ current_role_label }}</span>
+  </span>
+</div>
+
+<!-- Stat cards -->
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg">
+    <div class="stat-card bg-stat-total text-center">
+      <div class="stat-icon"><i class="bi bi-collection"></i></div>
+      <div class="stat-number">{{ total_books }}</div>
+      <div>Total Books</div>
+    </div>
+  </div>
+  <div class="col-6 col-lg">
+    <div class="stat-card bg-stat-available text-center">
+      <div class="stat-icon"><i class="bi bi-check-circle"></i></div>
+      <div class="stat-number">{{ available_books }}</div>
+      <div>Available Books</div>
+    </div>
+  </div>
+  <div class="col-6 col-lg">
+    <div class="stat-card bg-stat-issued text-center">
+      <div class="stat-icon"><i class="bi bi-box-arrow-up"></i></div>
+      <div class="stat-number">{{ total_issued }}</div>
+      <div>Issued Books</div>
+    </div>
+  </div>
+  <div class="col-6 col-lg">
+    <div class="stat-card bg-stat-returned text-center">
+      <div class="stat-icon"><i class="bi bi-box-arrow-in-down"></i></div>
+      <div class="stat-number">{{ returned_books }}</div>
+      <div>Returned Books</div>
+    </div>
+  </div>
+  <div class="col-6 col-lg">
+    <div class="stat-card bg-stat-students text-center">
+      <div class="stat-icon"><i class="bi bi-people"></i></div>
+      <div class="stat-number">{{ registered_students }}</div>
+      <div>Registered Students</div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick actions -->
+<h4 class="section-title">Quick Actions</h4>
+<div class="row g-3 mb-4">
+  {% if has_perm('add_book') %}
+  <div class="col-6 col-md-3">
+    <a class="module-card text-center" href="{{ url_for('add_book') }}">
+      <div class="module-icon"><i class="bi bi-plus-circle"></i></div>
+      <div class="mt-2 fw-semibold">Add Book</div>
+    </a>
+  </div>
+  {% endif %}
+  {% if has_perm('books') %}
+  <div class="col-6 col-md-3">
+    <a class="module-card text-center" href="{{ url_for('books') }}">
+      <div class="module-icon"><i class="bi bi-journals"></i></div>
+      <div class="mt-2 fw-semibold">Books</div>
+    </a>
+  </div>
+  {% endif %}
+  {% if has_perm('issue') %}
+  <div class="col-6 col-md-3">
+    <a class="module-card text-center" href="{{ url_for('issue_book') }}">
+      <div class="module-icon"><i class="bi bi-box-arrow-up"></i></div>
+      <div class="mt-2 fw-semibold">Issue Book</div>
+    </a>
+  </div>
+  {% endif %}
+  {% if has_perm('return') %}
+  <div class="col-6 col-md-3">
+    <a class="module-card text-center" href="{{ url_for('return_book') }}">
+      <div class="module-icon"><i class="bi bi-box-arrow-in-down"></i></div>
+      <div class="mt-2 fw-semibold">Return Book</div>
+    </a>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Charts -->
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-pie-chart text-primary"></i> Books by Category</div>
+      <div class="card-body">
+        <canvas id="categoryChart" height="220"></canvas>
+        <script type="application/json" id="categoryData">{{ categories | tojson }}</script>
+        {% if not categories %}
+          <p class="text-muted text-center mt-2 mb-0">No category data available.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card border-0 shadow-sm">
+      <div class="card-header bg-white fw-semibold"><i class="bi bi-bar-chart text-primary"></i> Most Borrowed Books</div>
+      <div class="card-body">
+        <canvas id="borrowedChart" height="220"></canvas>
+        <script type="application/json" id="borrowedData">{{ top_books | tojson }}</script>
+        {% if not top_books %}
+          <p class="text-muted text-center mt-2 mb-0">No issue data available yet.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

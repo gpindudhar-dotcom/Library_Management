@@ -1,0 +1,3 @@
+Record ID,Student Name,Student ID,Book ID,Issue Date,Due Date,Return Date,Overdue Days,Fine
+R001,Anita Sharma,S123,B001,2026-07-10,2026-07-24,2026-07-25,1,10
+R002,Raj Patel,S124,B002,2026-07-20,2026-08-03,,0,0

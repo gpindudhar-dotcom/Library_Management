@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login | Kalpataru Institute of Technology</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <div class="portal-login">
+    <!-- Top header bar -->
+    <div class="portal-header">
+      <div class="portal-logo">
+        <img src="{{ url_for('static', filename='images/kol_logo.png') }}" alt="KIT Logo" class="portal-logo-img">
+      </div>
+      <div class="portal-header-text">
+        <h1>Kalpataru Institute of Technology</h1>
+        <p>Library Book Management System</p>
+      </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-container" style="max-width:760px;margin:0 auto 16px;">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Two login cards: Super Admin (full access) & Sub Admin (limited access) -->
+    <div class="row justify-content-center g-4" style="max-width:860px;margin:0 auto;">
+      <!-- Super Admin login -->
+      <div class="col-md-6">
+        <form method="post" class="portal-login-card h-100">
+          <input type="hidden" name="role_type" value="super_admin">
+          <div class="portal-card-icon bg-danger text-white">
+            <i class="bi bi-shield-lock"></i>
+          </div>
+          <h2 class="text-danger">Super Admin</h2>
+          <p class="portal-card-sub">Full access to all modules &amp; settings</p>
+          <div class="badge bg-danger mb-3">Full Access</div>
+
+          <div class="form-group">
+            <label for="su_username">Username</label>
+            <div class="input-wrap">
+              <i class="bi bi-person"></i>
+              <input type="text" name="username" id="su_username" class="form-control" placeholder="Super Admin username" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="su_password">Password</label>
+            <div class="input-wrap">
+              <i class="bi bi-shield-lock"></i>
+              <input type="password" name="password" id="su_password" class="form-control" placeholder="Enter password" required>
+              <button type="button" class="toggle-password" onclick="togglePassword('su_password', 'su_icon')" aria-label="Show/Hide password">
+                <i class="bi bi-eye" id="su_icon"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-check mb-3 text-start">
+            <input class="form-check-input" type="checkbox" name="remember" id="su_remember">
+            <label class="form-check-label" for="su_remember">Remember me</label>
+          </div>
+
+          <button type="submit" class="btn btn-danger w-100">
+            <i class="bi bi-box-arrow-in-right"></i> Super Admin Login
+          </button>
+        </form>
+      </div>
+
+      <!-- Sub Admin login -->
+      <div class="col-md-6">
+        <form method="post" class="portal-login-card h-100">
+          <input type="hidden" name="role_type" value="sub_admin">
+          <div class="portal-card-icon bg-success text-white">
+            <i class="bi bi-person-badge"></i>
+          </div>
+          <h2 class="text-success">Sub Admin</h2>
+          <p class="portal-card-sub">Limited access to granted modules</p>
+          <div class="badge bg-success mb-3">Limited Access</div>
+
+          <div class="form-group">
+            <label for="sub_username">Username</label>
+            <div class="input-wrap">
+              <i class="bi bi-person"></i>
+              <input type="text" name="username" id="sub_username" class="form-control" placeholder="Sub Admin username" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="sub_password">Password</label>
+            <div class="input-wrap">
+              <i class="bi bi-shield-lock"></i>
+              <input type="password" name="password" id="sub_password" class="form-control" placeholder="Enter password" required>
+              <button type="button" class="toggle-password" onclick="togglePassword('sub_password', 'sub_icon')" aria-label="Show/Hide password">
+                <i class="bi bi-eye" id="sub_icon"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-check mb-3 text-start">
+            <input class="form-check-input" type="checkbox" name="remember" id="sub_remember">
+            <label class="form-check-label" for="sub_remember">Remember me</label>
+          </div>
+
+          <button type="submit" class="btn btn-success w-100">
+            <i class="bi bi-box-arrow-in-right"></i> Sub Admin Login
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <a href="{{ url_for('register') }}" class="register-link">Create an account</a>
+    </div>
+
+    <!-- Bottom info -->
+    <div class="portal-bottom">
+      <p>&copy; {{ now }} Kalpataru Institute of Technology. All rights reserved.</p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function togglePassword(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      icon.classList.toggle('bi-eye');
+      icon.classList.toggle('bi-eye-slash');
+    }
+  </script>
+</body>
+</html>

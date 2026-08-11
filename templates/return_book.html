@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Return Book - Library Book Management{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <h1 class="mb-4"><i class="bi bi-box-arrow-in-left text-primary"></i> Return Book</h1>
+
+    <div class="card">
+      <div class="card-body p-4">
+        {% if records %}
+        <form method="post">
+          <div class="mb-3">
+            <label class="form-label">Select Issued Record</label>
+            <select name="record_id" class="form-select" required>
+              <option value="">-- Choose a record --</option>
+              {% for r in records %}
+                <option value="{{ r['record_id'] }}">
+                  {{ r['record_id'] }} - {{ r['student_name'] }} ({{ r['book_id'] }} - {{ r['title'] }})
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Return Date</label>
+            <input type="date" name="return_date" class="form-control" required>
+          </div>
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Return Book</button>
+            <button type="reset" class="btn btn-outline-secondary"><i class="bi bi-arrow-counterclockwise"></i> Reset</button>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+        </form>
+        <p class="text-muted mt-3 small">
+          <i class="bi bi-info-circle"></i> Available copies increase automatically and fines are calculated for overdue returns.
+        </p>
+        {% else %}
+          <div class="alert alert-success mb-0">
+            <i class="bi bi-check-circle"></i> There are no pending book returns. All issued books have been returned.
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Issue Book - Library Book Management{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+    <h1 class="mb-4"><i class="bi bi-box-arrow-right text-primary"></i> Issue Book</h1>
+
+    <div class="card">
+      <div class="card-body p-4">
+        <form method="post">
+          <div class="mb-3">
+            <label class="form-label">Student Name</label>
+            <input type="text" name="student_name" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Student ID</label>
+            <input type="text" name="student_id" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Select Book (Available)</label>
+            <select name="book_id" class="form-select" required>
+              <option value="">-- Choose an available book --</option>
+              {% for b in books %}
+                <option value="{{ b['book_id'] }}">
+                  {{ b['book_id'] }} - {{ b['title'] }} ({{ b['available_copies'] }} available)
+                </option>
+              {% endfor %}
+            </select>
+            {% if not books %}
+              <div class="form-text text-danger">No books currently available to issue.</div>
+            {% endif %}
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Issue Date</label>
+            <input type="date" name="issue_date" class="form-control" required>
+          </div>
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg"></i> Issue Book</button>
+            <button type="reset" class="btn btn-outline-secondary"><i class="bi bi-arrow-counterclockwise"></i> Reset</button>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary">Cancel</a>
+          </div>
+        </form>
+        <p class="text-muted mt-3 small">
+          <i class="bi bi-info-circle"></i> The due date is automatically set to 14 days after the issue date.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

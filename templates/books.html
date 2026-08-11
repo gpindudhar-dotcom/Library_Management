@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Books | Kalpataru Institute of Technology Library{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+  <h1 class="mb-0"><i class="bi bi-journals text-primary"></i> Record Management</h1>
+  <a href="{{ url_for('add_book') }}" class="btn btn-primary"><i class="bi bi-plus-circle"></i> Add Book</a>
+</div>
+
+<div class="card border-0 shadow-sm mb-4">
+  <div class="card-body">
+    <div class="row g-2 align-items-end">
+      <div class="col-md-5">
+        <label class="form-label mb-1">Search</label>
+        <input type="text" id="tableSearch" class="form-control" placeholder="Search by title, author, category...">
+      </div>
+      <div class="col-md-3">
+        <label class="form-label mb-1">Rows per page</label>
+        <select id="pageSize" class="form-select">
+          <option value="5">5</option>
+          <option value="10" selected>10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+        </select>
+      </div>
+      <div class="col-md-4 d-flex gap-2">
+        <a href="{{ url_for('search') }}" class="btn btn-outline-primary"><i class="bi bi-search"></i> Advanced Search</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle" id="booksTable">
+        <thead>
+          <tr>
+            <th data-sort="book_id" class="sortable">Book ID <i class="bi bi-arrow-down-up small"></i></th>
+            <th data-sort="title" class="sortable">Title <i class="bi bi-arrow-down-up small"></i></th>
+            <th data-sort="author" class="sortable">Author <i class="bi bi-arrow-down-up small"></i></th>
+            <th data-sort="category" class="sortable">Category <i class="bi bi-arrow-down-up small"></i></th>
+            <th>Publisher</th>
+            <th>Year</th>
+            <th>ISBN</th>
+            <th>Qty</th>
+            <th>Available</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in books %}
+          <tr>
+            <td><span class="badge bg-primary">{{ row['book_id'] }}</span></td>
+            <td class="fw-semibold">{{ row['title'] }}</td>
+            <td>{{ row['author'] }}</td>
+            <td><span class="badge text-bg-light border">{{ row['category'] }}</span></td>
+            <td>{{ row['publisher'] }}</td>
+            <td>{{ row['year'] }}</td>
+            <td>{{ row['isbn'] }}</td>
+            <td>{{ row['quantity'] }}</td>
+            <td>{{ row['available_copies'] }}</td>
+            <td>
+              <a href="{{ url_for('edit_book', book_id=row['book_id']) }}" class="btn btn-sm btn-outline-primary" title="Edit">
+                <i class="bi bi-pencil"></i>
+              </a>
+              <button type="button" class="btn btn-sm btn-outline-danger" title="Delete" onclick="confirmDelete('{{ row['book_id'] }}')">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <!-- Pagination controls -->
+    <nav>
+      <ul class="pagination justify-content-center mb-0" id="pagination"></ul>
+    </nav>
+  </div>
+</div>
+{% endblock %}

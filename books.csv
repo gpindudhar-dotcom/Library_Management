@@ -1,0 +1,6 @@
+Book ID,Title,Author,Category,Publisher,Year,ISBN,Quantity,Available Copies
+B001,Python Basics,John Doe,Programming,Tech Press,2021,9780140449136,10,7
+B002,Data Science 101,Jane Smith,Data Science,DataPress,2020,9780140449143,8,4
+B003,Modern Algorithms,Alan Turing,Computer Science,AlgoPub,2019,9780140449150,5,5
+B004,Networking Essentials,Emily Clark,Networking,NetPress,2022,9780140449167,6,2
+B005,Database Systems,Robert King,Databases,DBBooks,2018,9780140449174,7,3

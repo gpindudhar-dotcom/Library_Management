@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Admin Management | Library Management System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+  <h1 class="mb-0"><i class="bi bi-people text-primary"></i> Admin Management</h1>
+  <a href="{{ url_for('create_sub_admin') }}" class="btn btn-primary">
+    <i class="bi bi-person-plus"></i> Create Admin
+  </a>
+</div>
+
+<div class="card border-0 shadow-sm">
+  <div class="card-header bg-white fw-semibold">
+    <i class="bi bi-shield-lock text-primary"></i> Admin Accounts
+  </div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Permissions</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for admin in admins %}
+          <tr>
+            <td class="fw-semibold">{{ admin['username'] }}</td>
+            <td>{{ admin['name'] }}</td>
+            <td>
+              {% if admin['role'] == 'admin' %}
+                <span class="badge bg-danger">Super Admin</span>
+              {% elif admin['role'] == 'semi_admin' %}
+                <span class="badge bg-info text-dark">Semi-Super Admin</span>
+              {% else %}
+                <span class="badge bg-warning text-dark">Sub Admin</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if admin['is_active'] %}
+                <span class="badge bg-success">Active</span>
+              {% else %}
+                <span class="badge bg-secondary">Disabled</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if admin['role'] == 'admin' %}
+                <span class="text-muted small">Full access</span>
+              {% elif admin['role'] == 'semi_admin' %}
+                <span class="text-muted small">All library modules + manage lower admins</span>
+              {% else %}
+                {% for perm in admin['permissions_list'] %}
+                  <span class="badge bg-light text-dark border">{{ perm }}</span>
+                {% else %}
+                  <span class="text-muted small">No permissions</span>
+                {% endfor %}
+              {% endif %}
+            </td>
+            <td class="text-end">
+              {% if can_manage(current_role, admin['role']) and admin['role'] != 'admin' %}
+                <a href="{{ url_for('edit_sub_admin', admin_id=admin['id']) }}" class="btn btn-sm btn-outline-primary" title="Edit">
+                  <i class="bi bi-pencil"></i>
+                </a>
+                <a href="{{ url_for('toggle_sub_admin', admin_id=admin['id']) }}" class="btn btn-sm btn-outline-warning" title="Enable/Disable"
+                   onclick="return confirm('Toggle this account status?');">
+                  <i class="bi bi-toggle-on"></i>
+                </a>
+                <a href="{{ url_for('delete_sub_admin', admin_id=admin['id']) }}" class="btn btn-sm btn-outline-danger" title="Delete"
+                   onclick="return confirm('Delete this admin? This cannot be undone.');">
+                  <i class="bi bi-trash"></i>
+                </a>
+              {% else %}
+                <span class="text-muted small">Protected</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+/dashboard 200
+/add_book 200
+/search 200
+/issue_book 200
+/return_book 200
+/reports 200
+/view_books 200
+/view_issued 200
+/view_overdue 200
+/generate_reports 302
